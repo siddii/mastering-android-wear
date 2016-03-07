@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Today</string>
+    <string name="day_of_year_card_title">Day of Year</string>
+    <string name="day_of_year_card_desc">Today is day %1$s and %2$s more day(s) for the rest of this year</string>
+</resources>
