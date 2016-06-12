@@ -85,7 +85,9 @@ public class OnThisDayActivity extends Activity implements
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
+        Log.i(TAG, "Data Events = " + dataEvents);
         for (DataEvent event : dataEvents) {
+            Log.i(TAG, "Data Event = " + event);
             if (event.getType() == DataEvent.TYPE_DELETED) {
                 Log.d(TAG, "DataItem deleted: " + event.getDataItem().getUri());
             } else if (event.getType() == DataEvent.TYPE_CHANGED) {
