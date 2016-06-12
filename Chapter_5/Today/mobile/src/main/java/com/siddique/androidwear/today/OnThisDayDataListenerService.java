@@ -11,11 +11,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
@@ -111,10 +111,12 @@ public class OnThisDayDataListenerService extends WearableListenerService implem
                         Log.i(TAG, "Heading node = " + heading);
                         if (heading != null) {
                             Log.i(TAG, "Wikipedia page heading = " + heading);
-                            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
-                            DataMap dataMap = dataMapRequest.getDataMap();
-                            dataMap.putString(Constants.ON_THIS_DAY_HEADER, heading.text());
-                            Wearable.DataApi.putDataItem(mGoogleApiClient, dataMapRequest.asPutDataRequest());
+
+//                            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
+//                            DataMap dataMap = dataMapRequest.getDataMap();
+//                            dataMap.putString(Constants.ON_THIS_DAY_HEADER, heading.text());
+//                            Wearable.DataApi.putDataItem(mGoogleApiClient, dataMapRequest.asPutDataRequest());
+                            sendMessage(Constants.ON_THIS_DAY_RESPONSE, heading.text().getBytes());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -126,6 +128,20 @@ public class OnThisDayDataListenerService extends WearableListenerService implem
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+
+    private void sendMessage(final String path, final byte[] data) {
+        Log.i(TAG, "Sending message to path " + path);
+        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(
+                new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+                    @Override
+                    public void onResult(NodeApi.GetConnectedNodesResult nodes) {
+                        for (Node node : nodes.getNodes()) {
+                            Wearable.MessageApi
+                                    .sendMessage(mGoogleApiClient, node.getId(), path, data);
+                        }
+                    }
+                });
     }
 
     @Override

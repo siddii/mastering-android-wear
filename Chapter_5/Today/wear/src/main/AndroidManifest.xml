@@ -26,6 +26,9 @@
         <activity
             android:name=".OnThisDayActivity"
             android:label="@string/on_this_day_title"/>
+
+        <service android:name=".ShowOnThisDayListenerService"/>
+
     </application>
 
 </manifest>
