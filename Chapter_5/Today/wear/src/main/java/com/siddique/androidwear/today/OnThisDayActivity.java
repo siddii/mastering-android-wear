@@ -7,9 +7,12 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 public class OnThisDayActivity extends Activity implements
@@ -48,6 +51,22 @@ public class OnThisDayActivity extends Activity implements
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "Connected to Data Api");
         Wearable.DataApi.addListener(mGoogleApiClient, this);
+
+        sendMessage(Constants.ON_THIS_DAY_REQUEST, "OnThisDay".getBytes());
+    }
+
+    private void sendMessage(final String path, final byte[] data) {
+        Log.i(TAG, "Sending message to path " + path);
+        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(
+                new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+                    @Override
+                    public void onResult(NodeApi.GetConnectedNodesResult nodes) {
+                        for (Node node : nodes.getNodes()) {
+                            Wearable.MessageApi
+                                    .sendMessage(mGoogleApiClient, node.getId(), path, data);
+                        }
+                    }
+                });
     }
 
     @Override

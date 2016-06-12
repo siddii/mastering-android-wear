@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Today</string>
+    <string name="connection_status">Connected :</string>
+    <string name="connection_status_default">false</string>
+</resources>
