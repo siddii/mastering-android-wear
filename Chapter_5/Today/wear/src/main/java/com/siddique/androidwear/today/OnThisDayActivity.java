@@ -8,13 +8,16 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 
 public class OnThisDayActivity extends Activity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        DataApi.DataListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
     private boolean mResolvingError;
@@ -31,9 +34,6 @@ public class OnThisDayActivity extends Activity implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-//        TextView desc = (TextView) findViewById(R.id.day_of_year_desc);
-//        desc.setText("On this day");
     }
 
     @Override
@@ -48,6 +48,7 @@ public class OnThisDayActivity extends Activity implements
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "Connected to Data Api");
+        Wearable.DataApi.addListener(mGoogleApiClient, this);
         sendMessage(Constants.ON_THIS_DAY_REQUEST, "OnThisDay".getBytes());
     }
 
@@ -73,9 +74,23 @@ public class OnThisDayActivity extends Activity implements
     @Override
     protected void onStop() {
         if (null != mGoogleApiClient && mGoogleApiClient.isConnected()) {
+            Wearable.DataApi.removeListener(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
         super.onStop();
+    }
+
+    @Override
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        Log.i(TAG, "##### Data Events = " + dataEvents);
+        for (DataEvent event : dataEvents) {
+            Log.i(TAG, "Data Event = " + event);
+            if (event.getType() == DataEvent.TYPE_DELETED) {
+                Log.d(TAG, "DataItem deleted: " + event.getDataItem().getUri());
+            } else if (event.getType() == DataEvent.TYPE_CHANGED) {
+                Log.d(TAG, "DataItem changed: " + event.getDataItem().getUri());
+            }
+        }
     }
 
     @Override
@@ -83,4 +98,5 @@ public class OnThisDayActivity extends Activity implements
         Log.i(TAG, "Connection Failed " + connectionResult);
         mResolvingError = true;
     }
+
 }

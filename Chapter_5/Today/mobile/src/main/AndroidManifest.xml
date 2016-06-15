@@ -24,7 +24,7 @@
         </activity>
 
 
-        <service android:name=".OnThisDayDataListenerService">
+        <service android:name=".HandheldListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />

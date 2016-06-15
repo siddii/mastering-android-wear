@@ -9,9 +9,9 @@ import com.google.android.gms.wearable.WearableListenerService;
  * Wearable listener service for data layer messages
  * Created by michaelHahn on 1/11/15.
  */
-public class ListenerService extends WearableListenerService {
+public class WatchListenerService extends WearableListenerService {
 
-    private static final String TAG = ListenerService.class.getName();
+    private static final String TAG = WatchListenerService.class.getName();
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {

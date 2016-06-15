@@ -11,11 +11,16 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
@@ -23,8 +28,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class OnThisDayDataListenerService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = OnThisDayDataListenerService.class.getName();
+public class HandheldListenerService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    private static final String TAG = HandheldListenerService.class.getName();
     private GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -112,12 +117,22 @@ public class OnThisDayDataListenerService extends WearableListenerService implem
                         if (heading != null) {
                             Log.i(TAG, "Wikipedia page heading = " + heading);
 
-//                            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
-//                            DataMap dataMap = dataMapRequest.getDataMap();
-//                            dataMap.putString(Constants.ON_THIS_DAY_DATA_ITEM_HEADER, heading.text());
-//                            Log.i(TAG, "Sending dataMap request ...");
-//                            Wearable.DataApi.putDataItem(mGoogleApiClient, dataMapRequest.asPutDataRequest());
-                            sendMessage(Constants.ON_THIS_DAY_RESPONSE, heading.text().getBytes());
+                            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
+                            DataMap dataMap = dataMapRequest.getDataMap();
+                            dataMap.putString(Constants.ON_THIS_DAY_DATA_ITEM_HEADER, heading.text());
+                            Log.i(TAG, "Sending dataMap request ...");
+                            PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient, dataMapRequest.asPutDataRequest());
+                            pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+                                @Override
+                                public void onResult(final DataApi.DataItemResult result) {
+                                    if(result.getStatus().isSuccess()) {
+                                        Log.d(TAG, "Data item set: " + result.getDataItem().getUri());
+                                    }
+                                }
+                            });
+
+
+//                            sendMessage(Constants.ON_THIS_DAY_RESPONSE, heading.text().getBytes());
                         }
                     }
                 }, new Response.ErrorListener() {
