@@ -3,7 +3,9 @@ package com.siddique.androidwear.today;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -29,26 +31,35 @@ public class OnThisDayActivity extends Activity implements
 
     private static final String TAG = OnThisDayActivity.class.getName();
 
+    private OnThisDay onThisDay = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_this_day);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        if (onThisDay == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(Wearable.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+        } else {
+            showOnThisDay(onThisDay);
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (!mResolvingError) {
+        if (!mResolvingError && onThisDay == null) {
             Log.i(TAG, "Connecting to Google Api Client");
             mGoogleApiClient.connect();
+        } else {
+            showOnThisDay(onThisDay);
         }
     }
+
 
     @Override
     public void onConnected(Bundle connectionHint) {
@@ -87,6 +98,7 @@ public class OnThisDayActivity extends Activity implements
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
+        Log.i(TAG, "###### onDataChanged");
         for (DataEvent event : dataEvents) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
 
@@ -94,12 +106,20 @@ public class OnThisDayActivity extends Activity implements
                 DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
 
                 String heading = dataMap.get(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
-                Log.i(TAG, "#### Heading = " + heading);
+                ArrayList<String> listItems = dataMap.get(Constants.ON_THIS_DAY_DATA_ITEM_CONTENT);
+                onThisDay = new OnThisDay(heading, listItems);
 
-                ArrayList<String> content = dataMap.get(Constants.ON_THIS_DAY_DATA_ITEM_CONTENT);
-                Log.i(TAG, "#### content = " + content);
+                showOnThisDay(onThisDay);
             }
         }
+    }
+
+    private void showOnThisDay(OnThisDay onThisDay) {
+        TextView heading = (TextView) findViewById(R.id.on_this_day_heading);
+        heading.setText(Html.fromHtml(onThisDay.getHeadingHtml()));
+
+        TextView content = (TextView) findViewById(R.id.on_this_day_content);
+        content.setText(Html.fromHtml(onThisDay.getListItemsHtml()));
     }
 
     @Override

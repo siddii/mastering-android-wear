@@ -127,6 +127,8 @@ public class HandheldListenerService extends WearableListenerService implements 
 
                             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
                             DataMap dataMap = dataMapRequest.getDataMap();
+
+                            dataMap.putLong(Constants.ON_THIS_DAY_TIMESTAMP, new Date().getTime());
                             dataMap.putString(Constants.ON_THIS_DAY_DATA_ITEM_HEADER, heading.text());
 
                             Element listNode = doc.select("ul").first();
