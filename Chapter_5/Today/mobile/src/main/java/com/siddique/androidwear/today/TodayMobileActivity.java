@@ -14,13 +14,13 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class TodayMobileMainActivity extends Activity implements
+public class TodayMobileActivity extends Activity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
 
-    public static final String TAG = TodayMobileMainActivity.class.getName();
+    public static final String TAG = TodayMobileActivity.class.getName();
 
     private int CONNECTION_TIME_OUT_MS = 15000;
     private TextView devicesConnectedTextView = null;
