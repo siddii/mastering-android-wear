@@ -126,6 +126,7 @@ public class HandheldListenerService extends WearableListenerService implements 
                             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
                             DataMap dataMap = dataMapRequest.getDataMap();
 
+                            //The reason we add timestamp is to make this dataMap 'dirty' so, the wearable can get an updated data
                             dataMap.putLong(Constants.ON_THIS_DAY_TIMESTAMP, new Date().getTime());
                             dataMap.putString(Constants.ON_THIS_DAY_DATA_ITEM_HEADER, heading.text());
 
