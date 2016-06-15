@@ -22,12 +22,16 @@
         </activity>
         <activity
             android:name=".DayOfYearActivity"
-            android:label="@string/day_of_year_card_title"/>
+            android:label="@string/day_of_year_card_title" />
         <activity
             android:name=".OnThisDayActivity"
-            android:label="@string/on_this_day_title"/>
+            android:label="@string/on_this_day_title" />
 
-        <service android:name=".ShowOnThisDayListenerService"/>
+        <service android:name=".ListenerService">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>
+        </service>
 
     </application>
 

@@ -11,8 +11,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
@@ -30,7 +30,7 @@ public class OnThisDayDataListenerService extends WearableListenerService implem
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.v(TAG, "Created");
+        Log.i(TAG, "Created");
 
         if (null == mGoogleApiClient) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -38,24 +38,24 @@ public class OnThisDayDataListenerService extends WearableListenerService implem
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
-            Log.v(TAG, "GoogleApiClient created");
+            Log.i(TAG, "GoogleApiClient created");
         }
 
         if (!mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
-            Log.v(TAG, "Connecting to GoogleApiClient..");
+            Log.i(TAG, "Connecting to GoogleApiClient..");
         }
     }
 
     @Override
     public void onDestroy() {
 
-        Log.v(TAG, "Destroyed");
+        Log.i(TAG, "Destroyed");
 
         if (null != mGoogleApiClient) {
             if (mGoogleApiClient.isConnected()) {
                 mGoogleApiClient.disconnect();
-                Log.v(TAG, "GoogleApiClient disconnected");
+                Log.i(TAG, "GoogleApiClient disconnected");
             }
         }
 
@@ -64,24 +64,24 @@ public class OnThisDayDataListenerService extends WearableListenerService implem
 
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.v(TAG, "onConnectionSuspended called");
+        Log.i(TAG, "onConnectionSuspended called");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.v(TAG, "onConnectionFailed called");
+        Log.i(TAG, "onConnectionFailed called");
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.v(TAG, "onConnected called");
+        Log.i(TAG, "onConnected called");
 
     }
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         super.onDataChanged(dataEvents);
-        Log.v(TAG, "Data Changed");
+        Log.i(TAG, "Data Changed");
     }
 
     @Override
@@ -114,7 +114,8 @@ public class OnThisDayDataListenerService extends WearableListenerService implem
 
 //                            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
 //                            DataMap dataMap = dataMapRequest.getDataMap();
-//                            dataMap.putString(Constants.ON_THIS_DAY_HEADER, heading.text());
+//                            dataMap.putString(Constants.ON_THIS_DAY_DATA_ITEM_HEADER, heading.text());
+//                            Log.i(TAG, "Sending dataMap request ...");
 //                            Wearable.DataApi.putDataItem(mGoogleApiClient, dataMapRequest.asPutDataRequest());
                             sendMessage(Constants.ON_THIS_DAY_RESPONSE, heading.text().getBytes());
                         }
@@ -132,27 +133,31 @@ public class OnThisDayDataListenerService extends WearableListenerService implem
 
     private void sendMessage(final String path, final byte[] data) {
         Log.i(TAG, "Sending message to path " + path);
-        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(
-                new ResultCallback<NodeApi.GetConnectedNodesResult>() {
-                    @Override
-                    public void onResult(NodeApi.GetConnectedNodesResult nodes) {
-                        for (Node node : nodes.getNodes()) {
-                            Wearable.MessageApi
-                                    .sendMessage(mGoogleApiClient, node.getId(), path, data);
-                        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+                for(Node node : nodes.getNodes()) {
+                    MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), path, data).await();
+                    if(!result.getStatus().isSuccess()){
+                        Log.e(TAG, "Error sending message ");
+                    } else {
+                        Log.i(TAG, "Success!! sent to: " + node.getDisplayName());
                     }
-                });
+                }
+            }
+        }).start();
     }
 
     @Override
     public void onPeerConnected(Node peer) {
         super.onPeerConnected(peer);
-        Log.v(TAG, "Peer Connected " + peer.getDisplayName());
+        Log.i(TAG, "Peer Connected " + peer.getDisplayName());
     }
 
     @Override
     public void onPeerDisconnected(Node peer) {
         super.onPeerDisconnected(peer);
-        Log.v(TAG, "Peer Disconnected " + peer.getDisplayName());
+        Log.i(TAG, "Peer Disconnected " + peer.getDisplayName());
     }
 }
