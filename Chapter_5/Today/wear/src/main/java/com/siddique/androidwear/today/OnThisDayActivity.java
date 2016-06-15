@@ -11,9 +11,14 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
+
+import java.util.ArrayList;
 
 
 public class OnThisDayActivity extends Activity implements
@@ -82,13 +87,17 @@ public class OnThisDayActivity extends Activity implements
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
-        Log.i(TAG, "##### Data Events = " + dataEvents);
         for (DataEvent event : dataEvents) {
-            Log.i(TAG, "Data Event = " + event);
-            if (event.getType() == DataEvent.TYPE_DELETED) {
-                Log.d(TAG, "DataItem deleted: " + event.getDataItem().getUri());
-            } else if (event.getType() == DataEvent.TYPE_CHANGED) {
-                Log.d(TAG, "DataItem changed: " + event.getDataItem().getUri());
+            if (event.getType() == DataEvent.TYPE_CHANGED) {
+
+                DataItem dataItem = event.getDataItem();
+                DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
+
+                String heading = dataMap.get(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
+                Log.i(TAG, "#### Heading = " + heading);
+
+                ArrayList<String> content = dataMap.get(Constants.ON_THIS_DAY_DATA_ITEM_CONTENT);
+                Log.i(TAG, "#### content = " + content);
             }
         }
     }

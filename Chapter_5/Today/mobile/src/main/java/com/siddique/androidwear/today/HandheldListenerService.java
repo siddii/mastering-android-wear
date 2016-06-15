@@ -27,10 +27,16 @@ import com.google.android.gms.wearable.WearableListenerService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class HandheldListenerService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = HandheldListenerService.class.getName();
     private GoogleApiClient mGoogleApiClient;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     @Override
     public void onCreate() {
@@ -103,7 +109,7 @@ public class HandheldListenerService extends WearableListenerService implements 
     private void getOnThisDayContentFromWikipedia() {
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://en.wikipedia.org/wiki/Special:FeedItem/onthisday/20160612000000/en";
+        String url = "https://en.wikipedia.org/wiki/Special:FeedItem/onthisday/" + DATE_FORMAT.format(new Date()) + "000000/en";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -114,18 +120,33 @@ public class HandheldListenerService extends WearableListenerService implements 
                         Document doc = Jsoup.parse(response);
                         Element heading = doc.select("h1").first();
                         Log.i(TAG, "Heading node = " + heading);
+
+
                         if (heading != null) {
                             Log.i(TAG, "Wikipedia page heading = " + heading);
 
                             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(Constants.ON_THIS_DAY_DATA_ITEM_HEADER);
                             DataMap dataMap = dataMapRequest.getDataMap();
                             dataMap.putString(Constants.ON_THIS_DAY_DATA_ITEM_HEADER, heading.text());
+
+                            Element listNode = doc.select("ul").first();
+
+                            if (listNode != null) {
+                                Elements itemNodes = listNode.select("li");
+                                int size = itemNodes.size();
+                                ArrayList<String> items = new ArrayList<String>();
+                                for (int i = 0; i < size; i++) {
+                                    items.add(itemNodes.get(i).text());
+                                }
+                                dataMap.putStringArrayList(Constants.ON_THIS_DAY_DATA_ITEM_CONTENT, items);
+                            }
+
                             Log.i(TAG, "Sending dataMap request ...");
                             PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient, dataMapRequest.asPutDataRequest());
                             pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                                 @Override
                                 public void onResult(final DataApi.DataItemResult result) {
-                                    if(result.getStatus().isSuccess()) {
+                                    if (result.getStatus().isSuccess()) {
                                         Log.d(TAG, "Data item set: " + result.getDataItem().getUri());
                                     }
                                 }
@@ -152,9 +173,9 @@ public class HandheldListenerService extends WearableListenerService implements 
             @Override
             public void run() {
                 NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-                for(Node node : nodes.getNodes()) {
+                for (Node node : nodes.getNodes()) {
                     MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), path, data).await();
-                    if(!result.getStatus().isSuccess()){
+                    if (!result.getStatus().isSuccess()) {
                         Log.e(TAG, "Error sending message ");
                     } else {
                         Log.i(TAG, "Success!! sent to: " + node.getDisplayName());
