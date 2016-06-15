@@ -16,10 +16,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
@@ -153,9 +151,6 @@ public class HandheldListenerService extends WearableListenerService implements 
                                     }
                                 }
                             });
-
-
-//                            sendMessage(Constants.ON_THIS_DAY_RESPONSE, heading.text().getBytes());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -167,24 +162,6 @@ public class HandheldListenerService extends WearableListenerService implements 
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-    }
-
-    private void sendMessage(final String path, final byte[] data) {
-        Log.i(TAG, "Sending message to path " + path);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-                for (Node node : nodes.getNodes()) {
-                    MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), path, data).await();
-                    if (!result.getStatus().isSuccess()) {
-                        Log.e(TAG, "Error sending message ");
-                    } else {
-                        Log.i(TAG, "Success!! sent to: " + node.getDisplayName());
-                    }
-                }
-            }
-        }).start();
     }
 
     @Override
