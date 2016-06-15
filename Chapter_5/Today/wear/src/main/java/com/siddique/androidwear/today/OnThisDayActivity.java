@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.text.Html;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,6 +40,7 @@ public class OnThisDayActivity extends Activity implements
         setContentView(R.layout.activity_on_this_day);
 
         if (onThisDay == null) {
+            Toast.makeText(this, "Fetching from Wikipedia...", Toast.LENGTH_LONG).show();
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(Wearable.API)
                     .addConnectionCallbacks(this)
