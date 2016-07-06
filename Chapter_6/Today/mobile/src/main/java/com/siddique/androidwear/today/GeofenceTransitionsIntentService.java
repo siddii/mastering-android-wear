@@ -109,6 +109,7 @@ public class GeofenceTransitionsIntentService extends IntentService
                         .setLargeIcon(BitmapFactory.decodeResource(
                                 getResources(), background))
                         .setContentTitle(todoItems.size() + " " + todoItemType + " todo items found!")
+                        .setContentText(todoItems.toString())
                         .setContentIntent(viewPendingIntent);
 
         // Build the notification and issues it with notification manager.
