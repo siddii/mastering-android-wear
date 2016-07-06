@@ -22,7 +22,7 @@ public class TodayMobileActivity extends Activity implements
 
     public static final String TAG = TodayMobileActivity.class.getName();
 
-    private int CONNECTION_TIME_OUT_MS = 15000;
+
     private TextView devicesConnectedTextView = null;
 
 
@@ -60,7 +60,7 @@ public class TodayMobileActivity extends Activity implements
 
             @Override
             public void run() {
-                mGoogleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                mGoogleApiClient.blockingConnect(Constants.API_CLIENT_CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
                 NodeApi.GetConnectedNodesResult result =
                         Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
                 final List<Node> nodes = result.getNodes();

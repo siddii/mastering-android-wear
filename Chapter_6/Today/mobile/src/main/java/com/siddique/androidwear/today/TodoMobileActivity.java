@@ -1,8 +1,12 @@
 package com.siddique.androidwear.today;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,15 +20,26 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationServices;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-public class TodoMobileActivity extends AppCompatActivity {
+public class TodoMobileActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private ListView mTaskListView;
     private ArrayAdapter<String> mAdapter;
 
     public static final String TAG = TodoMobileActivity.class.getName();
+    private List<Geofence> geofenceList;
+    private PendingIntent mGeofencePendingIntent;
+
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +95,36 @@ public class TodoMobileActivity extends AppCompatActivity {
                 }
             });
         }
+
+        if (null == mGoogleApiClient) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+            Log.i(TAG, "GoogleApiClient created");
+        }
+
+        if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+            Log.i(TAG, "Connecting to GoogleApiClient..");
+        }
+    }
+
+    private void createGeofences() {
+        Log.i(TAG, "Creating geo fences");
+        geofenceList = new ArrayList<Geofence>();
+
+        geofenceList.add(new SimpleGeofence(
+                Constants.HOME_GEOFENCE_ID,
+                Constants.HOME_LATITUDE,
+                Constants.HOME_LONGITUDE).toGeofence());
+
+
+        geofenceList.add(new SimpleGeofence(
+                Constants.WORK_GEOFENCE_ID,
+                Constants.WORK_LATITUDE,
+                Constants.WORK_LONGITUDE).toGeofence());
     }
 
     private void refreshItems() {
@@ -117,5 +162,34 @@ public class TodoMobileActivity extends AppCompatActivity {
         String[] todoItemTypes = getResources().getStringArray(R.array.todoItemTypes);
         TodoItems.removeItem(this, todoItemTypes, removingItem);
         refreshItems();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (mGoogleApiClient != null) {
+            mGeofencePendingIntent = getGeofenceTransitionPendingIntent();
+            createGeofences();
+
+            Log.i(TAG, "Adding geofences to API location services");
+            LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, geofenceList,
+                    mGeofencePendingIntent);
+        }
+    }
+
+
+
+    private PendingIntent getGeofenceTransitionPendingIntent() {
+        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "onConnectionSuspended called");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.i(TAG, "onConnectionFailed called");
     }
 }

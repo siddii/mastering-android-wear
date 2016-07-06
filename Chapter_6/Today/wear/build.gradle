@@ -7,8 +7,8 @@ android {
 
     defaultConfig {
         applicationId "com.siddique.androidwear.today"
-        minSdkVersion 21
-        targetSdkVersion 23
+        minSdkVersion 20
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -25,4 +25,5 @@ dependencies {
     compile 'com.google.android.support:wearable:2.0.0-alpha1'
     //This version should match the same version in companion/mobile app
     compile 'com.google.android.gms:play-services-wearable:8.1.0'
+    compile 'com.android.support:support-v13:23.4.0'
 }

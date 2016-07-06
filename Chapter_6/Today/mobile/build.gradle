@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.siddique.androidwear.today"
-        minSdkVersion 23
-        targetSdkVersion 23
+        minSdkVersion 18
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -35,5 +35,7 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.google.android.gms:play-services-wearable:9.0.2'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
+    compile 'com.android.support:support-v13:23.4.0'
     compile 'com.android.support:design:23.4.0'
 }
