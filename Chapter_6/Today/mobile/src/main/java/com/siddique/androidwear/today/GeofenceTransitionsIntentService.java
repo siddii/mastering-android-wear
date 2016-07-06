@@ -20,13 +20,10 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
@@ -36,8 +33,7 @@ import java.util.Set;
 /**
  * Listens for geofence transition changes.
  */
-public class GeofenceTransitionsIntentService extends IntentService
-        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GeofenceTransitionsIntentService extends IntentService {
 
 
     private static final String TAG = GeofenceTransitionsIntentService.class.getName();
@@ -81,16 +77,12 @@ public class GeofenceTransitionsIntentService extends IntentService
                     if (Geofence.GEOFENCE_TRANSITION_ENTER == transitionType) {
                         Log.i(TAG, "Notifying home todo items");
                         notifyTodoItems(notificationManager, "Home", Constants.HOME_TODO_NOTIFICATION_ID, R.drawable.white_house);
-                    } else {
-                        notificationManager.cancel(Constants.HOME_TODO_NOTIFICATION_ID);
                     }
                     break;
                 case Constants.WORK_GEOFENCE_ID:
                     if (Geofence.GEOFENCE_TRANSITION_ENTER == transitionType) {
                         Log.i(TAG, "Notifying work todo items");
                         notifyTodoItems(notificationManager, "Work", Constants.WORK_TODO_NOTIFICATION_ID, R.drawable.capitol_hill);
-                    } else {
-                        notificationManager.cancel(Constants.HOME_TODO_NOTIFICATION_ID);
                     }
                     break;
             }
@@ -106,6 +98,7 @@ public class GeofenceTransitionsIntentService extends IntentService
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_today_notification)
                         .setLargeIcon(BitmapFactory.decodeResource(
                                 getResources(), background))
                         .setContentTitle(todoItems.size() + " " + todoItemType + " todo items found!")
@@ -115,17 +108,4 @@ public class GeofenceTransitionsIntentService extends IntentService
         // Build the notification and issues it with notification manager.
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-    }
-
 }
