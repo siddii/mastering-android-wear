@@ -22,8 +22,6 @@ public class Constants {
     public static int API_CLIENT_CONNECTION_TIME_OUT_MS = 15000;
 
 
-    public static final String TODO_ITEM_TIMESTAMP = "/todo/timestamp";
-    public static final String TODO_ITEM_HOME = "/todo/home";
-    public static final String TODO_ITEM_WORK = "/todo/work";
-
+    public static final int HOME_TODO_NOTIFICATION_ID = 10;
+    public static final int WORK_TODO_NOTIFICATION_ID = 20;
 }
