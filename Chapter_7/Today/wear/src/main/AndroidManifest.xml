@@ -30,6 +30,9 @@
         <activity
             android:name=".OnThisDayActivity"
             android:label="@string/on_this_day_title" />
+        <activity
+            android:name=".StepCounterActivity"
+            android:label="@string/daily_step_count_title" />
 
     </application>
 

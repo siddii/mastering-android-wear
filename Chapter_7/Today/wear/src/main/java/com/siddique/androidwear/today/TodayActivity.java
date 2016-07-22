@@ -52,6 +52,9 @@ public class TodayActivity extends Activity implements
             startActivity(intent);
         } else if (viewHolder.getAdapterPosition() == 2) {
             displaySpeechRecognizer();
+        } else if (viewHolder.getAdapterPosition() == 3) {
+            Intent intent = new Intent(this, StepCounterActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -123,7 +126,6 @@ public class TodayActivity extends Activity implements
                     }
                 });
     }
-
 
 
     @Override
