@@ -15,7 +15,7 @@ public class StepCounterActivity extends Activity implements SensorEventListener
     private SensorManager mSensorManager;
     private Sensor mSensor;
 
-    // Steps counted in current session
+    // Steps counted since the last reboot
     private int mSteps = 0;
 
     private static final String TAG = StepCounterActivity.class.getName();
