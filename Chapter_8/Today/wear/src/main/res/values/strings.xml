@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Today</string>
+    <string name="day_of_year_card_title">Day of Year</string>
+    <string name="day_of_year_card_desc">Today is day %1$s and %2$s more day(s) for the rest of this year</string>
+
+    <string name="daily_step_count_title">Total Step Count</string>
+    <string name="daily_step_count_desc">%1$s Steps</string>
+
+
+    <string name="on_this_day_title">On this day…</string>
+    <string name="on_this_day_desc">On this day desc…</string>
+</resources>

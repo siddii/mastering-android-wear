@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="actions">
+        <item>Day of Year</item>
+        <item>On this day…</item>
+        <item>Add Todo Item</item>
+        <item>Step Count</item>
+    </string-array>
+</resources>

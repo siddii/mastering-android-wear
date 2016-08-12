@@ -1,0 +1,39 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.siddique.androidwear.today">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <uses-sdk android:minSdkVersion="20"
+        android:targetSdkVersion="22" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault">
+
+        <!-- We need this entry to use Google Play Services -->
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <activity
+            android:name=".TodayActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".DayOfYearActivity"
+            android:label="@string/day_of_year_card_title" />
+        <activity
+            android:name=".OnThisDayActivity"
+            android:label="@string/on_this_day_title" />
+        <activity
+            android:name=".StepCounterActivity"
+            android:label="@string/daily_step_count_title" />
+
+    </application>
+
+</manifest>
