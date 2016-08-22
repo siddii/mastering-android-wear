@@ -51,7 +51,6 @@ public class TodayActivity extends Activity implements
             Intent intent = new Intent(this, OnThisDayActivity.class);
             startActivity(intent);
         } else if (viewHolder.getAdapterPosition() == 2) {
-//            displaySpeechRecognizer();
             Intent intent = new Intent(this, TodosActivity.class);
             startActivity(intent);
         } else if (viewHolder.getAdapterPosition() == 3) {
