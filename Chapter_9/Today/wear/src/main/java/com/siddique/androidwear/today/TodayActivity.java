@@ -52,7 +52,7 @@ public class TodayActivity extends Activity implements
             startActivity(intent);
         } else if (viewHolder.getAdapterPosition() == 2) {
 //            displaySpeechRecognizer();
-            Intent intent = new Intent(this, TodoActivity.class);
+            Intent intent = new Intent(this, TodosActivity.class);
             startActivity(intent);
         } else if (viewHolder.getAdapterPosition() == 3) {
             Intent intent = new Intent(this, StepCounterActivity.class);

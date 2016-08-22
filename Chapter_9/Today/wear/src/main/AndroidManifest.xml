@@ -31,7 +31,7 @@
             android:name=".DayOfYearActivity"
             android:label="@string/day_of_year_card_title" />
         <activity
-            android:name=".TodoActivity"
+            android:name=".TodosActivity"
             android:label="@string/todos_title" />
         <activity
             android:name=".OnThisDayActivity"

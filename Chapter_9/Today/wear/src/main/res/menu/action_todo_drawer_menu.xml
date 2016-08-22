@@ -18,7 +18,10 @@
     <item android:id="@+id/menu_add_todo"
           android:icon="@drawable/ic_add_to_list"
           android:title="Add Todo"/>
-    <item android:id="@+id/menu_show_todos"
+    <item android:id="@+id/menu_update_todo"
           android:icon="@drawable/ic_todo_list"
-          android:title="Todo List" />
+          android:title="Update Todo List" />
+    <item android:id="@+id/menu_clear_todos"
+          android:icon="@drawable/ic_clear_list"
+          android:title="Clear List" />
 </menu>
