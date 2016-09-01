@@ -1,0 +1,42 @@
+<android.support.wearable.view.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@drawable/jogging">
+
+    <android.support.wearable.view.CardScrollView
+        android:id="@+id/card_scroll_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:layout_box="bottom">
+
+        <android.support.wearable.view.CardFrame
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:layout_width="fill_parent">
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/daily_step_count_title"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/daily_step_count_desc"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="0 Steps"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </android.support.wearable.view.CardFrame>
+    </android.support.wearable.view.CardScrollView>
+</android.support.wearable.view.BoxInsetLayout>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Today</string>
+    <string name="app_name_underlined"><u>Today</u></string>
+    <string name="devices_connected_text">Devices connected:</string>
+    <string name="default_devices_connected">0</string>
+    <string name="title_activity_todo_mobile">Today - Todos</string>
+</resources>
