@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -63,10 +64,7 @@ import java.util.concurrent.TimeUnit;
 public class DigitalWatchFaceService extends CanvasWatchFaceService {
     private static final String TAG = DigitalWatchFaceService.class.getSimpleName();
 
-    private static final Typeface BOLD_TYPEFACE =
-            Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
-    private static final Typeface NORMAL_TYPEFACE =
-            Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+    private Typeface WATCH_TYPE_FACE = null;
 
     /**
      * Update rate in milliseconds for normal (not ambient and not mute) mode. We update twice
@@ -90,18 +88,26 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
         static final String COLON_STRING = ":";
 
-        /** Alpha value for drawing time when in mute mode. */
+        /**
+         * Alpha value for drawing time when in mute mode.
+         */
         static final int MUTE_ALPHA = 100;
 
-        /** Alpha value for drawing time when not in mute mode. */
+        /**
+         * Alpha value for drawing time when not in mute mode.
+         */
         static final int NORMAL_ALPHA = 255;
 
         static final int MSG_UPDATE_TIME = 0;
 
-        /** How often {@link #mUpdateTimeHandler} ticks in milliseconds. */
+        /**
+         * How often {@link #mUpdateTimeHandler} ticks in milliseconds.
+         */
         long mInteractiveUpdateRateMs = NORMAL_UPDATE_RATE_MS;
 
-        /** Handler to update the time periodically in interactive mode. */
+        /**
+         * Handler to update the time periodically in interactive mode.
+         */
         final Handler mUpdateTimeHandler = new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -201,10 +207,14 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             mAmString = resources.getString(R.string.digital_am);
             mPmString = resources.getString(R.string.digital_pm);
 
+            AssetManager assets = getApplicationContext().getAssets();
+            Log.i(TAG, "Assets = " + assets);
+            WATCH_TYPE_FACE = Typeface.createFromAsset(assets, "fonts/digital-7.ttf");
+
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(mInteractiveBackgroundColor);
             mDatePaint = createTextPaint(resources.getColor(R.color.digital_date));
-            mHourPaint = createTextPaint(mInteractiveHourDigitsColor, BOLD_TYPEFACE);
+            mHourPaint = createTextPaint(mInteractiveHourDigitsColor);
             mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor);
             mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor);
             mAmPmPaint = createTextPaint(resources.getColor(R.color.digital_am_pm));
@@ -222,7 +232,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
         }
 
         private Paint createTextPaint(int defaultInteractiveColor) {
-            return createTextPaint(defaultInteractiveColor, NORMAL_TYPEFACE);
+            return createTextPaint(defaultInteractiveColor, WATCH_TYPE_FACE);
         }
 
         private Paint createTextPaint(int defaultInteractiveColor, Typeface typeface) {
@@ -319,7 +329,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             super.onPropertiesChanged(properties);
 
             boolean burnInProtection = properties.getBoolean(PROPERTY_BURN_IN_PROTECTION, false);
-            mHourPaint.setTypeface(burnInProtection ? NORMAL_TYPEFACE : BOLD_TYPEFACE);
+            mHourPaint.setTypeface(burnInProtection ? WATCH_TYPE_FACE : WATCH_TYPE_FACE);
 
             mLowBitAmbient = properties.getBoolean(PROPERTY_LOW_BIT_AMBIENT, false);
 
@@ -531,14 +541,12 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                     canvas.drawText(
                             mDateFormat.format(mDate),
                             mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
-                }
-                else if (tapCount == 1) {
+                } else if (tapCount == 1) {
                     // Date
                     canvas.drawText(
                             "Day of year",
                             mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
-                }
-                else if (tapCount == 2) {
+                } else if (tapCount == 2) {
                     // Date
                     canvas.drawText(
                             "Days remaining",
