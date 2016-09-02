@@ -61,7 +61,7 @@ import java.util.concurrent.TimeUnit;
  * and without seconds in mute mode.
  */
 public class DigitalWatchFaceService extends CanvasWatchFaceService {
-    private static final String TAG = "DigitalWatchFaceService";
+    private static final String TAG = DigitalWatchFaceService.class.getSimpleName();
 
     private static final Typeface BOLD_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
@@ -78,6 +78,8 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
      * Update rate in milliseconds for mute mode. We update every minute, like in ambient mode.
      */
     private static final long MUTE_UPDATE_RATE_MS = TimeUnit.MINUTES.toMillis(1);
+
+    private int tapCount = 0;
 
     @Override
     public Engine onCreateEngine() {
@@ -191,6 +193,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
                     .setShowSystemUiTime(false)
+                    .setAcceptsTapEvents(true)
                     .build());
             Resources resources = DigitalWatchFaceService.this.getResources();
             mYOffset = resources.getDimension(R.dimen.digital_y_offset);
@@ -443,6 +446,24 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
         }
 
         @Override
+        public void onTapCommand(int tapType, int x, int y, long eventTime) {
+            Log.i(TAG, "Tapped " + tapType);
+            switch (tapType) {
+                case WatchFaceService.TAP_TYPE_TAP: {
+                    tapCount++;
+                    if (tapCount > 2) {
+                        tapCount = 0;
+                    }
+                    break;
+                }
+                default:
+                    super.onTapCommand(tapType, x, y, eventTime);
+                    break;
+            }
+
+        }
+
+        @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             long now = System.currentTimeMillis();
             mCalendar.setTimeInMillis(now);
@@ -505,10 +526,25 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                 canvas.drawText(
                         mDayOfWeekFormat.format(mDate),
                         mXOffset, mYOffset + mLineHeight, mDatePaint);
-                // Date
-                canvas.drawText(
-                        mDateFormat.format(mDate),
-                        mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
+                if (tapCount == 0) {
+                    // Date
+                    canvas.drawText(
+                            mDateFormat.format(mDate),
+                            mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
+                }
+                else if (tapCount == 1) {
+                    // Date
+                    canvas.drawText(
+                            "Day of year",
+                            mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
+                }
+                else if (tapCount == 2) {
+                    // Date
+                    canvas.drawText(
+                            "Days remaining",
+                            mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
+                }
+
             }
         }
 
