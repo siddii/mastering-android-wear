@@ -55,7 +55,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Sample digital watch face with blinking colons and seconds. In ambient mode, the seconds are
+ * Watch Face with blinking colons and seconds. In ambient mode, the seconds are
  * replaced with an AM/PM indicator and the colons don't blink. On devices with low-bit ambient
  * mode, the text is drawn without anti-aliasing in ambient mode. On devices which require burn-in
  * protection, the hours are drawn in normal rather than bold. The time is drawn with less contrast
@@ -208,7 +208,6 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
             mPmString = resources.getString(R.string.digital_pm);
 
             AssetManager assets = getApplicationContext().getAssets();
-            Log.i(TAG, "Assets = " + assets);
             WATCH_TYPE_FACE = Typeface.createFromAsset(assets, "fonts/digital-7.ttf");
 
             mBackgroundPaint = new Paint();
