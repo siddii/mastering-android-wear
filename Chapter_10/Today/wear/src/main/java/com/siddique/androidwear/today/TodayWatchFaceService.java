@@ -664,17 +664,22 @@ public class TodayWatchFaceService extends CanvasWatchFaceService {
          * @return whether UI has been updated
          */
         private boolean updateUiForKey(String configKey, int color) {
-            if (configKey.equals(WatchFaceUtil.KEY_BACKGROUND_COLOR)) {
-                setInteractiveBackgroundColor(color);
-            } else if (configKey.equals(WatchFaceUtil.KEY_HOURS_COLOR)) {
-                setInteractiveHourDigitsColor(color);
-            } else if (configKey.equals(WatchFaceUtil.KEY_MINUTES_COLOR)) {
-                setInteractiveMinuteDigitsColor(color);
-            } else if (configKey.equals(WatchFaceUtil.KEY_SECONDS_COLOR)) {
-                setInteractiveSecondDigitsColor(color);
-            } else {
-                Log.w(TAG, "Ignoring unknown config key: " + configKey);
-                return false;
+            switch (configKey) {
+                case WatchFaceUtil.KEY_BACKGROUND_COLOR:
+                    setInteractiveBackgroundColor(color);
+                    break;
+                case WatchFaceUtil.KEY_HOURS_COLOR:
+                    setInteractiveHourDigitsColor(color);
+                    break;
+                case WatchFaceUtil.KEY_MINUTES_COLOR:
+                    setInteractiveMinuteDigitsColor(color);
+                    break;
+                case WatchFaceUtil.KEY_SECONDS_COLOR:
+                    setInteractiveSecondDigitsColor(color);
+                    break;
+                default:
+                    Log.w(TAG, "Ignoring unknown config key: " + configKey);
+                    return false;
             }
             return true;
         }
