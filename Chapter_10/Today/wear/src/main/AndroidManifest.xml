@@ -44,7 +44,7 @@
             android:label="@string/daily_step_count_title" />
 
         <service
-            android:name=".DigitalWatchFaceService"
+            android:name=".TodayWatchFaceService"
             android:label="@string/digital_name"
             android:permission="android.permission.BIND_WALLPAPER" >
             <meta-data
@@ -71,7 +71,7 @@
         </service>
 
         <activity
-            android:name=".DigitalWatchFaceWearableConfigActivity"
+            android:name=".WatchFaceConfigActivity"
             android:label="@string/digital_config_name" >
             <intent-filter>
                 <action android:name="com.siddique.androidwear.today.CONFIG_DIGITAL" />

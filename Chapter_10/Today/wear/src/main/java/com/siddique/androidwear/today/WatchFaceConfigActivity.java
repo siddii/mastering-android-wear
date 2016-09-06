@@ -37,16 +37,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.Wearable;
-import com.siddique.androidwear.today.DigitalWatchFaceService;
-import com.siddique.androidwear.today.DigitalWatchFaceUtil;
 
 /**
- * The watch-side config activity for {@link DigitalWatchFaceService}, which allows for setting the
+ * The watch-side config activity for {@link TodayWatchFaceService}, which allows for setting the
  * background color.
  */
-public class DigitalWatchFaceWearableConfigActivity extends Activity implements
+public class WatchFaceConfigActivity extends Activity implements
         WearableListView.ClickListener, WearableListView.OnScrollListener {
-    private static final String TAG = "DigitalWatchFaceConfig";
+    private static final String TAG = WatchFaceConfigActivity.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
     private TextView mHeader;
@@ -150,9 +148,9 @@ public class DigitalWatchFaceWearableConfigActivity extends Activity implements
 
     private void updateConfigDataItem(final int backgroundColor) {
         DataMap configKeysToOverwrite = new DataMap();
-        configKeysToOverwrite.putInt(DigitalWatchFaceUtil.KEY_BACKGROUND_COLOR,
+        configKeysToOverwrite.putInt(WatchFaceUtil.KEY_BACKGROUND_COLOR,
                 backgroundColor);
-        DigitalWatchFaceUtil.overwriteKeysInConfigDataMap(mGoogleApiClient, configKeysToOverwrite);
+        WatchFaceUtil.overwriteKeysInConfigDataMap(mGoogleApiClient, configKeysToOverwrite);
     }
 
     private class ColorListAdapter extends WearableListView.Adapter {
