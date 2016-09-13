@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Today</string>
+    <string name="todos_title">Todos</string>
+    <string name="day_of_year_card_title">Day of Year</string>
+    <string name="day_of_year_card_desc">Today is day %1$s and %2$s more day(s) for the rest of this year</string>
+
+    <string name="daily_step_count_title">Total Step Count</string>
+    <string name="daily_step_count_desc">%1$s Steps</string>
+
+
+    <string name="on_this_day_title">On this day…</string>
+    <string name="on_this_day_desc">On this day desc…</string>
+
+    <string name="digital_name">Today WatchFace</string>
+    <string name="digital_background_color">Background color</string>
+    <string name="digital_config_name">Settings</string>
+    <string name="digital_am">AM</string>
+    <string name="digital_pm">PM</string>
+
+    <string name="color_black">Black</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_green">Green</string>
+    <string name="color_navy">Navy</string>
+    <string name="color_red">Red</string>
+
+
+    <string-array name="color_array">
+        <item>@string/color_black</item>
+        <item>@string/color_blue</item>
+        <item>@string/color_green</item>
+        <item>@string/color_navy</item>
+        <item>@string/color_red</item>
+    </string-array>
+
+    <!-- Daily Total Activity -->
+    <string name="daily_total">Daily Totals</string>
+    <string name="timestamp_label">Timestamp: %1$d</string>
+    <string name="mode_active_label">Active Mode (Handler)</string>
+    <string name="mode_ambient_label">Ambient Mode (Alarm)</string>
+    <string name="update_rate_label">Update rate: %1$d sec</string>
+    <string name="draw_count_label">Draw count: %1$d</string>
+</resources>
