@@ -75,8 +75,6 @@ public class DailyTotalActivity extends WearableActivity {
     private static final long ACTIVE_INTERVAL_MS = TimeUnit.SECONDS.toMillis(1);
     private static final long AMBIENT_INTERVAL_MS = TimeUnit.SECONDS.toMillis(20);
 
-    /** Tracks latest ambient details, such as burnin offsets, etc. */
-    private Bundle mAmbientDetails;
 
     private TextView mTimeTextView;
     private TextView mTimeStampTextView;
@@ -174,12 +172,6 @@ public class DailyTotalActivity extends WearableActivity {
         Log.d(TAG, "onEnterAmbient()");
         super.onEnterAmbient(ambientDetails);
 
-        /**
-         * In this sample, we aren't using the ambient details bundle (EXTRA_BURN_IN_PROTECTION or
-         * EXTRA_LOWBIT_AMBIENT), but if you need them, you can pull them from the local variable
-         * set here.
-         */
-        mAmbientDetails = ambientDetails;
 
         /** Clears Handler queue (only needed for updates in active mode). */
         mActiveModeUpdateHandler.removeMessages(MSG_UPDATE_SCREEN);
