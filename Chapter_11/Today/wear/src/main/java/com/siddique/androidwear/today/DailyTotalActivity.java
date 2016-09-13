@@ -66,7 +66,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DailyTotalActivity extends WearableActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = DailyTotalActivity.class.getSimpleName();
 
     /** Custom 'what' for Message sent to Handler. */
     private static final int MSG_UPDATE_SCREEN = 0;
