@@ -39,9 +39,17 @@
         <activity
             android:name=".OnThisDayActivity"
             android:label="@string/on_this_day_title" />
+        <!--
+        To update the screen more than once per minute in ambient mode, developers should set
+        the launch mode for the activity to single instance. Otherwise, the AlarmManager launch
+        intent will open a new activity every time the Alarm is triggered rather than reusing
+        the same (already active) Activity.
+        -->
         <activity
             android:name=".StepCounterActivity"
-            android:label="@string/daily_step_count_title" />
+            android:label="@string/daily_step_count_title"
+            android:launchMode="singleInstance"
+            />
 
         <service
             android:name=".TodayWatchFaceService"
@@ -80,18 +88,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <!--
-            To update the screen more than once per minute in ambient mode, developers should set
-            the launch mode for the activity to single instance. Otherwise, the AlarmManager launch
-            intent will open a new activity every time the Alarm is triggered rather than reusing
-            the same (already active) Activity.
-        -->
-        <activity android:name=".DailyTotalActivity"
-            android:label="@string/daily_total"
-            android:launchMode="singleInstance">
-        </activity>
-
     </application>
 
 </manifest>

@@ -56,9 +56,6 @@ public class TodayActivity extends Activity implements
         } else if (viewHolder.getAdapterPosition() == 3) {
             Intent intent = new Intent(this, StepCounterActivity.class);
             startActivity(intent);
-        } else if (viewHolder.getAdapterPosition() == 4) {
-            Intent intent = new Intent(this, DailyTotalActivity.class);
-            startActivity(intent);
         }
     }
 
